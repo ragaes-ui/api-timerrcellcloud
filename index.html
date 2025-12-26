@@ -3,92 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Harap Tunggu...</title>
-    <!-- Memuat Tailwind CSS -->
+    <title>Akses Terbatas</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Memuat Font Inter dari Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Menggunakan font Inter sebagai font utama */
-        body {
-            font-family: 'Inter', sans-serif;
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Animasi Background Ambient */
+        .ambient-light {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.6;
+            animation: float 10s infinite ease-in-out;
+        }
+        .light-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #4f46e5; border-radius: 50%; }
+        .light-2 { bottom: -10%; right: -10%; width: 400px; height: 400px; background: #ec4899; border-radius: 50%; animation-delay: 5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+
+        /* Efek Glassmorphism */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animasi Shake untuk Error */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        .shake { animation: shake 0.4s ease-in-out; }
+
+        .hidden-section { display: none; }
+        
+        /* Transisi Fade */
+        .fade-in { animation: fadeIn 0.5s forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white antialiased">
-    <!-- Kontainer Utama -->
-    <div id="loader" class="min-h-screen flex flex-col items-center justify-center text-center p-6">
+<body class="bg-gray-900 text-white h-screen flex items-center justify-center overflow-hidden relative selection:bg-indigo-500 selection:text-white">
+
+    <div class="ambient-light light-1"></div>
+    <div class="ambient-light light-2"></div>
+
+    <div id="main-card" class="glass-card w-full max-w-md p-8 rounded-3xl shadow-2xl mx-4 transition-all duration-300">
         
-        <!-- Ikon Jam -->
-        <div class="w-20 h-20 mb-6 text-indigo-400">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-full h-full">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+        <div id="login-section" class="text-center">
+            <div class="w-16 h-16 bg-indigo-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-indigo-400">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+            </div>
+
+            <h1 class="text-2xl font-bold mb-2">Akses Terbatas</h1>
+            <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                Halaman ini dilindungi untuk menjaga stabilitas server. Masukkan kode akses Anda.
+            </p>
+
+            <div class="space-y-4">
+                <input type="password" id="passwordInput" placeholder="Masukkan Kata Sandi" 
+                    class="w-full bg-gray-800/50 border border-gray-700 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all placeholder-gray-500 text-center tracking-widest">
+                
+                <button onclick="checkPassword()" 
+                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-indigo-500/30 transition-all active:scale-95">
+                    Buka Akses
+                </button>
+            </div>
+
+            <p id="error-msg" class="text-red-400 text-xs mt-4 hidden font-medium">Kata sandi salah, silakan coba lagi.</p>
         </div>
 
-        <!-- Konten Teks -->
-        <h1 class="text-3xl md:text-4xl font-bold mb-3">Untuk mengantisipasi trafik tinggi ke akses web kami,kami mengaktifkan laman ini</h1>
-        <p class="text-lg md:text-xl text-gray-300 mb-8">
-            Situs akan terbuka dalam 
-            <span id="countdown" class="font-bold text-indigo-400 text-2xl">15</span> 
-            detik...
-        </p>
+        <div id="timer-section" class="hidden-section text-center fade-in">
+            <div class="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-emerald-400 animate-pulse">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
 
-        <!-- Bilah Kemajuan (Progress Bar) -->
-        <div class="w-full max-w-md bg-gray-700 rounded-full h-2.5">
-            <div id="progress-bar" class="bg-indigo-500 h-2.5 rounded-full transition-all duration-1000 ease-linear" style="width: 0%"></div>
+            <h1 class="text-xl font-bold mb-2">Antrean Trafik Tinggi</h1>
+            <p class="text-gray-400 text-sm mb-8">
+                Kami sedang mengalihkan Anda ke server unduhan yang aman. Mohon jangan tutup halaman ini.
+            </p>
+
+            <div class="relative w-40 h-40 mx-auto mb-8 flex items-center justify-center">
+                <svg class="w-full h-full transform -rotate-90">
+                    <circle cx="80" cy="80" r="70" stroke="currentColor" stroke-width="8" fill="transparent" class="text-gray-800" />
+                    <circle id="progress-ring" cx="80" cy="80" r="70" stroke="currentColor" stroke-width="8" fill="transparent" 
+                        class="text-indigo-500 transition-all duration-1000 ease-linear" 
+                        stroke-dasharray="440" stroke-dashoffset="0" stroke-linecap="round" />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center flex-col">
+                    <span id="countdown" class="text-4xl font-bold text-white">15</span>
+                    <span class="text-xs text-gray-500 uppercase tracking-wider mt-1">Detik</span>
+                </div>
+            </div>
+
+            <div class="bg-gray-800/50 rounded-lg p-3 border border-gray-700/50">
+                <div class="flex items-center justify-center space-x-2">
+                    <span class="relative flex h-3 w-3">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    </span>
+                    <span class="text-xs text-emerald-400 font-medium">Koneksi Aman Terhubung</span>
+                </div>
+            </div>
         </div>
+
     </div>
 
     <script>
-        const countdownElement = document.getElementById('countdown');
-        const progressBar = document.getElementById('progress-bar');
+        // --- KONFIGURASI USER ---
+        const config = {
+            targetUrl: 'https://drive.google.com/drive/folders/1wZg1ZtLVPdO48dyhtdc3hq6wSd3McbdK', // URL Tujuan
+            password: '123', // Password akses
+            duration: 15 // Durasi detik
+        };
+        // ------------------------
 
-        // --- KONFIGURASI ---
-        // Ganti URL ini dengan alamat situs web tujuan Anda
-        const redirectUrl = 'https://drive.google.com/drive/folders/1wZg1ZtLVPdO48dyhtdc3hq6wSd3McbdK'; 
-        
-        // Atur durasi hitung mundur dalam detik
-        const countdownDuration = 15; 
-        // --- AKHIR KONFIGURASI ---
-
-        let timeLeft = countdownDuration;
-
-        // Fungsi untuk memperbarui timer dan bilah kemajuan
-        const updateTimer = () => {
-            if (timeLeft >= 0) {
-                // Update teks hitung mundur
-                countdownElement.textContent = timeLeft;
-                
-                // Hitung persentase progres
-                const progressPercentage = ((countdownDuration - timeLeft) / countdownDuration) * 100;
-                progressBar.style.width = `${progressPercentage}%`;
-
-                // Kurangi waktu
-                timeLeft--;
-            } else {
-                // Waktu habis, hentikan interval dan alihkan halaman
-                clearInterval(timerInterval);
-                
-                // Tampilkan pesan pengalihan
-                document.querySelector('h1').textContent = 'Mengalihkan...';
-                document.querySelector('p').style.display = 'none';
-                progressBar.style.width = '100%';
-
-                // Alihkan ke URL tujuan setelah jeda singkat
-                setTimeout(() => {
-                    window.location.href = redirectUrl;
-                }, 500);
-            }
+        // Mencegah Back Button (Tetap di halaman)
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.pushState(null, null, location.href);
         };
 
-        // Panggil updateTimer sekali di awal untuk tampilan instan
-        updateTimer();
+        const loginSection = document.getElementById('loginSection');
+        const timerSection = document.getElementById('timerSection');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMsg = document.getElementById('error-msg');
+        const mainCard = document.getElementById('main-card');
 
-        // Atur interval untuk memperbarui setiap detik
-        const timerInterval = setInterval(updateTimer, 1000);
+        function checkPassword() {
+            if (passwordInput.value === config.password) {
+                // Password Benar
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('timer-section').style.display = 'block';
+                startTimer();
+            } else {
+                // Password Salah
+                errorMsg.classList.remove('hidden');
+                mainCard.classList.add('shake');
+                passwordInput.value = '';
+                passwordInput.focus();
+                
+                // Hapus animasi shake setelah selesai
+                setTimeout(() => {
+                    mainCard.classList.remove('shake');
+                }, 400);
+            }
+        }
+
+        // Trigger Enter Key
+        passwordInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") checkPassword();
+        });
+
+        function startTimer() {
+            let timeLeft = config.duration;
+            const countdownEl = document.getElementById('countdown');
+            const ring = document.getElementById('progress-ring');
+            
+            // Keliling lingkaran (2 * PI * r) -> r=70 -> ~440
+            const circumference = 440; 
+            
+            const timer = setInterval(() => {
+                timeLeft--;
+                countdownEl.textContent = timeLeft;
+                
+                // Update Lingkaran Progress
+                const offset = circumference - (timeLeft / config.duration) * circumference;
+                ring.style.strokeDashoffset = offset;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    // Teks berubah saat mengalihkan
+                    countdownEl.innerHTML = "<span class='text-2xl'>GO</span>";
+                    document.querySelector('h1').textContent = "Mengalihkan...";
+                    
+                    setTimeout(() => {
+                        window.location.href = config.targetUrl;
+                    }, 800);
+                }
+            }, 1000);
+        }
     </script>
 </body>
 </html>

@@ -3,110 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akses Terbatas</title>
+    <title>Secure Gateway</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        
-        /* Animasi Background Ambient */
-        .ambient-light {
+        body { font-family: 'Space Grotesk', sans-serif; }
+
+        /* --- 1. ANIMASI BACKGROUND CAHAYA (AURORA) --- */
+        .glow-blob {
             position: absolute;
             filter: blur(80px);
-            z-index: -1;
             opacity: 0.6;
-            animation: float 10s infinite ease-in-out;
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 10s ease-in-out infinite;
         }
-        .light-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #4f46e5; border-radius: 50%; }
-        .light-2 { bottom: -10%; right: -10%; width: 400px; height: 400px; background: #ec4899; border-radius: 50%; animation-delay: 5s; }
+        .blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #7c3aed; /* Violet */ }
+        .blob-2 { bottom: -10%; right: -10%; width: 400px; height: 400px; background: #2563eb; /* Blue */ animation-delay: 2s; }
+        .blob-3 { top: 40%; left: 40%; width: 300px; height: 300px; background: #db2777; /* Pink */ animation-delay: 4s; }
 
         @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(30px, 30px); }
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
         }
 
-        /* Efek Glassmorphism */
-        .glass-card {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* --- 2. KARTU GLASS DENGAN BORDER MENYALA --- */
+        .neon-card {
+            background: rgba(10, 10, 20, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Kilatan cahaya di atas kartu */
+        .neon-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, #a78bfa, transparent);
+            animation: border-flow 3s linear infinite;
+        }
+        @keyframes border-flow {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
         }
 
-        /* Animasi Shake untuk Error */
+        /* --- 3. INPUT & BUTTON GLOW --- */
+        .input-glow:focus {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+            border-color: #8b5cf6;
+        }
+        .btn-glow {
+            background-size: 200% auto;
+            transition: 0.5s;
+        }
+        .btn-glow:hover {
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.6);
+            background-position: right center;
+        }
+
+        /* --- 4. ANIMASI LAINNYA --- */
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
-        .shake { animation: shake 0.4s ease-in-out; }
+        
+        .fade-enter { animation: fadeIn 0.8s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
         .hidden-section { display: none; }
-        
-        /* Transisi Fade */
-        .fade-in { animation: fadeIn 0.5s forwards; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
-<body class="bg-gray-900 text-white h-screen flex items-center justify-center overflow-hidden relative selection:bg-indigo-500 selection:text-white">
+<body class="bg-[#050510] text-white h-screen flex flex-col items-center justify-center overflow-hidden selection:bg-purple-500 selection:text-white">
 
-    <div class="ambient-light light-1"></div>
-    <div class="ambient-light light-2"></div>
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+    <div class="glow-blob blob-3"></div>
 
-    <div id="main-card" class="glass-card w-full max-w-md p-8 rounded-3xl shadow-2xl mx-4 transition-all duration-300">
-        
-        <div id="login-section" class="text-center">
-            <div class="w-16 h-16 bg-indigo-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-indigo-400">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                </svg>
-            </div>
-
-            <h1 class="text-2xl font-bold mb-2">Akses Terbatas</h1>
-            <p class="text-gray-400 text-sm mb-6 leading-relaxed">
-                Halaman ini dilindungi untuk menjaga stabilitas server. Masukkan kode akses Anda.
-            </p>
-
-            <div class="space-y-4">
-                <input type="password" id="passwordInput" placeholder="Masukkan Kata Sandi" 
-                    class="w-full bg-gray-800/50 border border-gray-700 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all placeholder-gray-500 text-center tracking-widest">
-                
-                <button onclick="checkPassword()" 
-                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-indigo-500/30 transition-all active:scale-95">
-                    Buka Akses
-                </button>
-            </div>
-
-            <p id="error-msg" class="text-red-400 text-xs mt-4 hidden font-medium">Kata sandi salah, silakan coba lagi.</p>
-        </div>
-
-        <div id="timer-section" class="hidden-section text-center fade-in">
-            <div class="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-emerald-400 animate-pulse">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </div>
-
-            <h1 class="text-xl font-bold mb-2">Antrean Trafik Tinggi</h1>
-            <p class="text-gray-400 text-sm mb-8">
-                Kami sedang mengalihkan Anda ke server unduhan yang aman. Mohon jangan tutup halaman ini.
-            </p>
-
-            <div class="relative w-40 h-40 mx-auto mb-8 flex items-center justify-center">
-                <svg class="w-full h-full transform -rotate-90">
-                    <circle cx="80" cy="80" r="70" stroke="currentColor" stroke-width="8" fill="transparent" class="text-gray-800" />
-                    <circle id="progress-ring" cx="80" cy="80" r="70" stroke="currentColor" stroke-width="8" fill="transparent" 
-                        class="text-indigo-500 transition-all duration-1000 ease-linear" 
-                        stroke-dasharray="440" stroke-dashoffset="0" stroke-linecap="round" />
-                </svg>
-                <div class="absolute inset-0 flex items-center justify-center flex-col">
-                    <span id="countdown" class="text-4xl font-bold text-white">15</span>
-                    <span class="text-xs text-gray-500 uppercase tracking-wider mt-1">Detik</span>
+    <div id="main-card" class="neon-card w-full max-w-sm p-1 rounded-3xl mx-4 transition-all duration-300">
+        <div class="bg-[#0f0f1a]/80 rounded-[22px] p-8 h-full w-full backdrop-blur-xl border border-white/5">
+            
+            <div id="login-section" class="text-center">
+                <div class="mb-6 relative inline-block">
+                    <div class="absolute inset-0 bg-purple-500 blur-xl opacity-40"></div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="relative w-12 h-12 text-white mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
                 </div>
+
+                <h2 class="text-2xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 mb-2">
+                    Protected Link
+                </h2>
+                <p class="text-gray-400 text-sm mb-8 font-light">
+                    Enter the access key to decrypt URL.
+                </p>
+
+                <div class="space-y-4">
+                    <input type="password" id="passwordInput" placeholder="ACCESS KEY" 
+                        class="input-glow w-full bg-[#1a1a2e] text-white border border-gray-700 px-4 py-3 rounded-xl focus:outline-none transition-all text-center tracking-[0.2em] placeholder-gray-600 text-lg">
+                    
+                    <button onclick="checkPassword()" 
+                        class="btn-glow w-full bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 text-white font-bold py-3 rounded-xl uppercase tracking-wider text-sm">
+                        Unlock
+                    </button>
+                </div>
+                
+                <p id="error-msg" class="text-red-400 text-xs mt-4 font-mono hidden opacity-0 transition-opacity duration-300">
+                    [ERROR]: INVALID ACCESS KEY
+                </p>
+            </div>
+
+            <div id="timer-section" class="hidden-section text-center fade-enter">
+                <div class="mb-6 relative inline-block">
+                     <div class="absolute inset-0 bg-green-500 blur-xl opacity-30"></div>
+                     <svg xmlns="http://www.w3.org/2000/svg" class="relative w-12 h-12 text-green-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+
+                <h2 class="text-xl font-bold text-white mb-6">Access Granted</h2>
+
+                <div class="relative w-40 h-40 mx-auto mb-8 flex items-center justify-center">
+                    <div class="absolute inset-0 bg-indigo-500 blur-2xl opacity-20 rounded-full"></div>
+                    
+                    <svg class="w-full h-full transform -rotate-90 relative z-10">
+                        <circle cx="80" cy="80" r="70" stroke="#333" stroke-width="6" fill="transparent" />
+                        <circle id="progress-ring" cx="80" cy="80" r="70" stroke="url(#gradient)" stroke-width="6" fill="transparent" 
+                            class="transition-all duration-1000 ease-linear" 
+                            stroke-dasharray="440" stroke-dashoffset="0" stroke-linecap="round" />
+                        
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#8b5cf6" />
+                                <stop offset="100%" stop-color="#3b82f6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    
+                    <div class="absolute inset-0 flex flex-col items-center justify-center z-20">
+                        <span id="countdown" class="text-5xl font-bold text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">15</span>
+                    </div>
+                </div>
+
+                <p class="text-gray-400 text-xs font-mono animate-pulse">
+                    ESTABLISHING SECURE CONNECTION...
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- KONFIGURASI ---
+        const config = {
+            targetUrl: 'https://drive.google.com/drive/folders/1wZg1ZtLVPdO48dyhtdc3hq6wSd3McbdK',
+            password: '123',
+            duration: 15
+        };
+
+        // --- FITUR ANTI BACK (Tahan Pengguna di Halaman) ---
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.pushState(null, null, location.href);
+        };
+
+        // --- LOGIC ---
+        const loginSection = document.getElementById('login-section');
+        const timerSection = document.getElementById('timer-section');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMsg = document.getElementById('error-msg');
+        const mainCard = document.getElementById('main-card');
+
+        function checkPassword() {
+            if (passwordInput.value === config.password) {
+                // Sukses
+                loginSection.style.display = 'none';
+                timerSection.style.display = 'block';
+                startTimer();
+            } else {
+                // Gagal
+                errorMsg.classList.remove('hidden');
+                // Trik kecil untuk memicu opacity transition
+                setTimeout(() => errorMsg.style.opacity = '1', 10); 
+                
+                mainCard.classList.add('shake');
+                passwordInput.value = '';
+                passwordInput.focus();
+                
+                setTimeout(() => {
+                    mainCard.classList.remove('shake');
+                }, 400);
+            }
+        }
+
+        passwordInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") checkPassword();
+        });
+
+        function startTimer() {
+            let timeLeft = config.duration;
+            const countdownEl = document.getElementById('countdown');
+            const ring = document.getElementById('progress-ring');
+            const circumference = 440; // 2 * PI * 70
+            
+            const timer = setInterval(() => {
+                timeLeft--;
+                countdownEl.textContent = timeLeft;
+                
+                const offset = circumference - (timeLeft / config.duration) * circumference;
+                ring.style.strokeDashoffset = offset;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    countdownEl.innerHTML = "🚀";
+                    document.querySelector('.animate-pulse').textContent = "REDIRECTING...";
+                    
+                    setTimeout(() => {
+                        window.location.href = config.targetUrl;
+                    }, 500);
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
             </div>
 
             <div class="bg-gray-800/50 rounded-lg p-3 border border-gray-700/50">
